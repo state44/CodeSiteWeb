@@ -3,31 +3,80 @@
 <head>
 	<title>Pixel Art</title>
 	<style>
-		/* Create a 50 x 50 grid of pixels */
+		
 		.pixel {
 			width: 16px;
 			height: 16px;
 			border: 1px solid black;
 			float: left;
-			background-color: white;
+			background-color: Black;
+		}
+
+		#download {
+			background-color: lightgreen;
+			font-size: 1.2em;
+			padding: 5px 10px;
+			border-radius: 5px;
+			color: white;
+			border: none;
+			margin-left: 60px;
+			margin-top: 10px;
+		}
+
+		.color-selector {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+		}
+
+		.color-selector label {
+			margin-right: 10px;
+		}
+
+		.color-selector select {
+			margin-right: 10px;
+		}
+
+		#upload {
+			margin-top: 10px;
+		}
+
+		#uploaded-image {
+			display: none;
+			margin-top: 10px;
+			align-items: center;
+			float: right;
+			width: 50px;
+			height: 50px;
+			object-fit: contain;
+			margin-right: 10px;
 		}
 	</style>
 </head>
 <body>
 	<h1>Pixel Art</h1>
-	<div id="canvas">
-		<!-- Create a 30 x 30 grid of pixels using JavaScript -->
-	</div>
-	<div>
+	
+	<div class="color-selector">
 		<label for="color">Color:</label>
 		<select id="color">
 			<option value="black">Black</option>
 			<option value="red">Red</option>
 			<option value="green">Green</option>
 			<option value="blue">Blue</option>
+			<option value="white">White</option>
+			<option value="yellow">Yellow</option>
 		</select>
 		<button id="clear">Clear</button>
 	</div>
+
+	<div id="canvas">
+		<!-- Create a 30 x 30 grid of pixels using JavaScript -->
+	</div>
+
+	<input type="file" id="upload">
+	<img id="uploaded-image">
+
+	<button id="download">Download</button>
 
 	<script>
 		// Create a 30 x 30 grid of pixels using JavaScript
@@ -72,6 +121,46 @@
 				pixel.style.backgroundColor = 'white';
 			});
 		});
+
+						// Add event listener to upload an image
+		const uploadInput = document.getElementById('upload');
+		const uploadedImage = document.getElementById('uploaded-image');
+		uploadInput.addEventListener('change', () => {
+		const file = uploadInput.files[0];
+		const reader = new FileReader();
+		reader.addEventListener('load', () => {
+		uploadedImage.src = reader.result;
+		uploadedImage.style.display = 'block';
+		});
+		reader.readAsDataURL(file);
+		});
+
+			// Add event listener to download the canvas as an image
+		const downloadButton = document.getElementById('download');
+		downloadButton.addEventListener('click', () => {
+			// Create a canvas element to draw the pixels on
+			const canvas = document.createElement('canvas');
+			canvas.width = 480;
+			canvas.height = 480;
+
+			const context = canvas.getContext('2d');
+			context.imageSmoothingEnabled = false;
+
+			// Draw each pixel on the canvas
+			pixels.forEach((pixel, index) => {
+				const x = index % 30;
+				const y = Math.floor(index / 30);
+				context.fillStyle = pixel.style.backgroundColor;
+				context.fillRect(x * 16, y * 16, 16, 16);
+			});
+
+			// Download the canvas as an image
+			const link = document.createElement('a');
+			link.download = 'pixel-art.png';
+			link.href = canvas.toDataURL();
+			link.click();
+		});
 	</script>
 </body>
 </html>
+				
