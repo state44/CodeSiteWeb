@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pixel Art</title>
+	<style>
+		/* Create a 50 x 50 grid of pixels */
+		.pixel {
+			width: 16px;
+			height: 16px;
+			border: 1px solid black;
+			float: left;
+			background-color: white;
+		}
+	</style>
+</head>
+<body>
+	<h1>Pixel Art</h1>
+	<div id="canvas">
+		<!-- Create a 30 x 30 grid of pixels using JavaScript -->
+	</div>
+	<div>
+		<label for="color">Color:</label>
+		<select id="color">
+			<option value="black">Black</option>
+			<option value="red">Red</option>
+			<option value="green">Green</option>
+			<option value="blue">Blue</option>
+		</select>
+		<button id="clear">Clear</button>
+	</div>
+
+	<script>
+		// Create a 30 x 30 grid of pixels using JavaScript
+		const canvas = document.getElementById('canvas');
+		for (let i = 0; i < 30; i++) {
+			for (let j = 0; j < 30; j++) {
+				const pixel = document.createElement('div');
+				pixel.classList.add('pixel');
+				canvas.appendChild(pixel);
+			}
+			canvas.appendChild(document.createElement('br'));
+		}
+
+		// Add event listeners to change the color of the pixel when clicked
+		const pixels = document.querySelectorAll('.pixel');
+		let isMouseDown = false;
+		pixels.forEach(pixel => {
+			pixel.addEventListener('mousedown', () => {
+				isMouseDown = true;
+				changeColor(pixel);
+			});
+			pixel.addEventListener('mouseenter', () => {
+				if (isMouseDown) {
+					changeColor(pixel);
+				}
+			});
+		});
+		document.addEventListener('mouseup', () => {
+			isMouseDown = false;
+		});
+
+		// Function to change the color of a pixel
+		function changeColor(pixel) {
+			const selectedColor = document.getElementById('color').value;
+			pixel.style.backgroundColor = selectedColor;
+		}
+
+		// Add event listener to clear the canvas
+		const clearButton = document.getElementById('clear');
+		clearButton.addEventListener('click', () => {
+			pixels.forEach(pixel => {
+				pixel.style.backgroundColor = 'white';
+			});
+		});
+	</script>
+</body>
+</html>
