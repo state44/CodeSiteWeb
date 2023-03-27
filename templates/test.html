@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pixelate Image</title>
+	<style>
+		img {
+			image-rendering: pixelated;
+		}
+		canvas {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<h1>Pixelate Image</h1>
+	<form>
+		<input type="file" id="inputImage" accept="image/*">
+		<label for="pixelationLevel">Pixelation Level:</label>
+		<input type="range" id="pixelationLevel" min="1" max="30" value="5">
+		<p>Current Pixelation Level: <span id="currentLevel">5</span></p>
+	</form>
+	<div>
+		<img id="outputImage" src="" alt="Uploaded Image">
+		<canvas id="canvas"></canvas>
+	</div>
+	<script>
+		var inputImage = document.getElementById('inputImage');
+		var pixelationLevel = document.getElementById('pixelationLevel');
+		var currentLevel = document.getElementById('currentLevel');
+		var outputImage = document.getElementById('outputImage');
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+
+		inputImage.addEventListener('change', function() {
+			var file = this.files[0];
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				outputImage.src = e.target.result;
+				pixelateImage();
+			};
+			reader.readAsDataURL(file);
+		});
+
+		pixelationLevel.addEventListener('input', function() {
+			currentLevel.textContent = this.value;
+			pixelateImage();
+		});
+
+		function pixelateImage() {
+			var level = pixelationLevel.value;
+			var width = outputImage.width;
+			var height = outputImage.height;
+			canvas.width = width;
+			canvas.height = height;
+			context.drawImage(outputImage, 0, 0, width, height);
+			context.imageSmoothingEnabled = false;
+			context.drawImage(canvas, 0, 0, width / level, height / level, 0, 0, width, height);
+			outputImage.src = canvas.toDataURL();
+		}
+	</script>
+</body>
+</html>
+
+
